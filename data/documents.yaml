@@ -1,0 +1,131 @@
+documents:
+
+  - document_id: academic_scholarships
+    title: "Академические стипендии НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://www.hse.ru/scholarships/academic'
+
+  - document_id: admission_committee_contacts
+    title: "Контакты приемной комиссии"
+    year: 2026
+    source_url: 'https://ba.hse.ru/#contacts'
+
+  - document_id: admission_features_dpr_lpr_zaporizhzhia_kherson_regions
+    title: "Правила приема. Приложение 5."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: admission_to_hse_funded_places
+    title: "Траектория поступления на места за счет средств НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://ba.hse.ru/tracks_hse'
+
+  - document_id: applicant_inquiries
+    title: "Как Вышка рассматривает обращения абитуриентов"
+    year: 2026
+    source_url: 'https://ba.hse.ru/abitsupport'
+
+  - document_id: budget_admission
+    title: "Траектория поступления на бюджетные места"
+    year: 2026
+    source_url: 'https://ba.hse.ru/entr'
+
+  - document_id: contract_conclusion_procedure
+    title: "Траектория поступления на платные места"
+    year: 2026
+    source_url: 'https://ba.hse.ru/pay'
+
+  - document_id: cost_of_education
+    title: "Стоимость обучения"
+    year: 2026
+    source_url: 'https://ba.hse.ru/price'
+
+  - document_id: discounts
+    title: "Критерии предоставления скидок"
+    year: 2026
+    source_url: 'https://ba.hse.ru/discount'
+
+  - document_id: dormitories_list
+    title: "Список общежитий"
+    year: 2026
+    source_url: 'https://www.hse.ru/dormitory'
+
+  - document_id: dormitory_allocation_procedure
+    title: "Порядок распределения мест в общежитиях НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://www.hse.ru/dormoffice/predostavleniemest'
+
+  - document_id: dormitory_costs
+    title: "Стоимость проживания в общежитиях НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://www.hse.ru/dormitory/price'
+
+  - document_id: dormitory_move_in_procedure_russian_students
+    title: "Порядок заселения в общежитие НИУ ВШЭ студентов 1 курса бакалавриата/специалитета набора 2026 года граждан РФ"
+    year: 2026
+    source_url: 'https://www.hse.ru/dormoffice/zaseleniebak2026'
+
+  - document_id: educational_programs
+    title: "Правила приема. Приложение 1."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: entrance_exams_disabilities
+    title: "Правила приема. Приложение 10."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: foreign_applicants_separate_competition_2026
+    title: Правила приема. Приложение 11."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: goscredit
+    title: "Образовательный кредит с государственной поддержкой"
+    year: 2026
+    source_url: 'https://ba.hse.ru/goscredit'
+
+  - document_id: individual_achievements
+    title: "Правила приема. Приложение 6."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: international_applicant_contacts
+    title: "Контакты для иностранных поступающих"
+    year: 2026
+    source_url: 'https://admissions.hse.ru/#contacts'
+
+  - document_id: named_scholarships
+    title: "Именные стипендии"
+    year: 2026
+    source_url: 'https://www.hse.ru/scholarships/name_new'
+
+  - document_id: olympiad_special_rights
+    title: "Особые права, предоставляемые победителям и призерам олимпиад школьников. Приложение 2."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: olympiad_subjects_programs
+    title: "Особые права, предоставляемые победителям и призерам олимпиад школьников. Приложение 1."
+    year: 2026
+    source_url: 'https://ba.hse.ru/docs#pagetop'
+
+  - document_id: paid_admission
+    title: "Траектория посткпления на платные места"
+    year: 2026
+    source_url: 'https://ba.hse.ru/entrpay'
+
+  - document_id: president_government_scholarships_grants
+    title: "Стипендии Президента и Правительства Российской Федерации и гранты"
+    year: 2026
+    source_url: 'https://www.hse.ru/scholarships/president_prioritet'
+
+  - document_id: state_social_scholarship
+    title: "Государственная социальная стипендия"
+    year: 2026
+    source_url: 'https://www.hse.ru/scholarships/gss_'
+
+  - document_id: targeted_education
+    title: "Целевое обучение"
+    year: 2026
+    source_url: 'https://ba.hse.ru/tselevoe'
