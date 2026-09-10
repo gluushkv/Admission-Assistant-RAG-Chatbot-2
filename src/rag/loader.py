@@ -1,18 +1,7 @@
-from dataclasses import dataclass
 from pathlib import Path
-
 import yaml
 
-
-@dataclass(frozen=True)
-class Document:
-
-    document_id: str
-    title: str
-    text: str
-    year: int
-    source_url: str | None
-    source_path: Path
+from rag.models import Document
 
 
 def load_documents(prepared_dir: str | Path) -> list[Document]:
@@ -52,7 +41,6 @@ def load_documents(prepared_dir: str | Path) -> list[Document]:
     for entry in document_entries:
         document_id = entry.get("document_id")
         title = entry.get("title")
-        year = entry.get("year")
         source_url = entry.get("source_url")
 
         if not document_id:
@@ -68,11 +56,6 @@ def load_documents(prepared_dir: str | Path) -> list[Document]:
         if not title:
             raise ValueError(
                 f"Document '{document_id}' has no title."
-            )
-
-        if not year:
-            raise ValueError(
-                f"Document '{document_id}' has no year."
             )
 
         markdown_path = prepared_dir / f"{document_id}.md"
