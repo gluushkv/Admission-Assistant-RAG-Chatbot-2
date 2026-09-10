@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+.DS_Store
+**/.DS_Store
+
+rag-chatbot-venv/
+.venv/
+venv/
+
+scripts/offsets_check.txt
