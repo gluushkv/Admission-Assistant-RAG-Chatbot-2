@@ -39,7 +39,6 @@ class DocumentTextSplitter(Protocol):
 
 @dataclass(frozen=True)
 class TextSplitterChunker:
-    """Adapter for library splitters whose split_text() returns strings."""
 
     splitter: StringTextSplitter
 
@@ -54,7 +53,6 @@ class TextSplitterChunker:
 
 @dataclass(frozen=True)
 class MarkdownChunker:
-    """Adapter for a Markdown splitter that returns document-like objects."""
 
     splitter: DocumentTextSplitter
 
@@ -71,7 +69,6 @@ class MarkdownChunker:
 
 @dataclass(frozen=True)
 class MarkdownRecursiveChunker:
-    """Split Markdown by structure, then recursively split each section."""
 
     markdown_splitter: DocumentTextSplitter
     recursive_splitter: StringTextSplitter
@@ -109,7 +106,6 @@ def _build_chunks(
     chunk_texts: Sequence[str],
     base_offset: int = 0,
 ) -> list[Chunk]:
-    """Convert exact source substrings into project Chunk objects."""
 
     spans = _locate_chunk_spans(
         source_text=source_text,
@@ -144,7 +140,6 @@ def _locate_chunk_spans(
     source_text: str,
     chunk_texts: Sequence[str],
 ) -> list[tuple[str, int, int]]:
-    """Locate ordered chunk strings as exact half-open spans in source_text."""
 
     spans: list[tuple[str, int, int]] = []
 
@@ -158,9 +153,6 @@ def _locate_chunk_spans(
         if previous_start is None or previous_end is None:
             search_from = 0
         else:
-            # A non-redundant next span that progresses through the source
-            # cannot start earlier than previous_end - len(chunk_text).
-            # + previous_start + 1 prevents mapping two chunks to the same span.
             search_from = max(
                 previous_start + 1,
                 previous_end - len(chunk_text),
@@ -194,6 +186,5 @@ def _make_chunk_id(
     start_offset: int,
     end_offset: int,
 ) -> str:
-    """Create a deterministic chunk identifier from its source span."""
 
     return f"{document_id}:{start_offset}:{end_offset}"
