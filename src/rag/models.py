@@ -6,7 +6,6 @@ class Document:
     document_id: str
     title: str
     text: str
-    year: int
     source_url: str | None
     source_path: Path
 

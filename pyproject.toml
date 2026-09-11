@@ -9,8 +9,11 @@ description = "RAG chatbot for university admission"
 requires-python = ">=3.11"
 
 dependencies = [
-    # --- документы / предобработка ---
+    # --- configs ---
     "pyyaml",
+    # --- chunking ---
+    "langchain-text-splitters",
+    "nltk",
 ]
 
 [project.optional-dependencies]
