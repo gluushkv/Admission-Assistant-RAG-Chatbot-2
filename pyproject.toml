@@ -14,6 +14,14 @@ dependencies = [
     # --- chunking ---
     "langchain-text-splitters",
     "nltk",
+    # --- embeddings ---
+    "numpy",
+    "sentence-transformers>=2.7.0",
+    "transformers>=4.51.0",
+
+    # --- retrieval ---
+    "qdrant-client",
+
 ]
 
 [project.optional-dependencies]

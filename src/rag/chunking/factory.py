@@ -45,7 +45,7 @@ def create_chunker(
     sentence_language: str = "russian",
     markdown_headers: Sequence[tuple[str, str]] = DEFAULT_MARKDOWN_HEADERS,
 ) -> Chunker:
-    """Create a chunker for the requested strategy."""
+
 
     _validate_size_parameters(
         chunk_size=chunk_size,
@@ -101,7 +101,6 @@ def _create_recursive_splitter(
     chunk_overlap: int,
     length_function: Callable[[str], int],
 ) -> RecursiveCharacterTextSplitter:
-    """Create the recursive text splitter."""
 
     return RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
@@ -119,7 +118,6 @@ def _create_sentence_splitter(
     length_function: Callable[[str], int],
     language: str,
 ) -> NLTKTextSplitter:
-    """Create the sentence-aware NLTK splitter."""
 
     return NLTKTextSplitter(
         separator="",
@@ -136,7 +134,6 @@ def _create_markdown_splitter(
     *,
     headers: Sequence[tuple[str, str]],
 ) -> ExperimentalMarkdownSyntaxTextSplitter:
-    """Create the Markdown syntax-aware splitter."""
 
     return ExperimentalMarkdownSyntaxTextSplitter(
         headers_to_split_on=list(headers),
@@ -149,7 +146,6 @@ def _validate_size_parameters(
     chunk_size: int,
     chunk_overlap: int,
 ) -> None:
-    """Validate chunk size and overlap parameters."""
 
     if isinstance(chunk_size, bool) or not isinstance(chunk_size, int):
         raise ValueError(
