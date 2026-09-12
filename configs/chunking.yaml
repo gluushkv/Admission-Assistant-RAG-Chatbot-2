@@ -1,0 +1,19 @@
+common:
+  length_unit: characters
+  sentence_language: russian
+
+  ks:
+    - 1
+    - 3
+    - 5
+
+
+method_experiment:
+  strategies:
+    - recursive
+    - sentence
+    - markdown
+    - markdown_recursive
+
+  chunk_size: 512
+  chunk_overlap: 64
