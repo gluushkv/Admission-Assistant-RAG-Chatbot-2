@@ -265,9 +265,6 @@ def build_summary(
                 "median_chunk_length": (
                     result.chunk_statistics.median_length
                 ),
-                "std_chunk_length": (
-                    result.chunk_statistics.std_length
-                ),
                 "min_chunk_length": (
                     result.chunk_statistics.min_length
                 ),

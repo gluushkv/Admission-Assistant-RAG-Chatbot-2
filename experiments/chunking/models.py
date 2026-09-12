@@ -22,7 +22,6 @@ class ChunkStatistics:
 
     mean_length: float
     median_length: float
-    std_length: float
 
     min_length: int
     max_length: int
