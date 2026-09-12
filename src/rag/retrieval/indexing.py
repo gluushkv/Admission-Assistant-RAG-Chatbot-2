@@ -14,8 +14,10 @@ def build_dense_index(
     recreate: bool = True,
 ) -> None:
 
-    if not chunks:
-        raise ValueError("chunks must not be empty")
+    if len(chunks) == 0:
+        raise ValueError(
+            "chunks must not be empty"
+        )
 
     vectors = embedder.embed_documents(
         [chunk.text for chunk in chunks]
