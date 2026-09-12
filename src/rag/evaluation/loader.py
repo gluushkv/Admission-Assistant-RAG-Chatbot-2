@@ -20,38 +20,34 @@ def load_golden_questions(
             f"Golden set file not found: {path}"
         )
 
-    questions: list[GoldenQuestion] = []
-
     with path.open(
         "r",
         encoding="utf-8",
     ) as file:
-        for line_number, line in enumerate(
-            file,
-            start=1,
-        ):
-            if not line.strip():
-                continue
+        try:
+            data = json.load(file)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Invalid JSON in golden set: {path}"
+            ) from exc
 
-            try:
-                data = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(
-                    f"Invalid JSON at "
-                    f"{path}:{line_number}"
-                ) from exc
+    if not isinstance(data, list):
+        raise ValueError(
+            "Golden set JSON must contain a top-level list."
+        )
 
-            questions.append(
-                _parse_golden_question(
-                    data,
-                    line_number=line_number,
-                )
-            )
-
-    if not questions:
+    if not data:
         raise ValueError(
             f"Golden set is empty: {path}"
         )
+
+    questions = [
+        _parse_golden_question(
+            item,
+            index=index,
+        )
+        for index, item in enumerate(data)
+    ]
 
     return questions
 
@@ -59,18 +55,23 @@ def load_golden_questions(
 def _parse_golden_question(
     data: dict,
     *,
-    line_number: int,
+    index: int,
 ) -> GoldenQuestion:
+    if not isinstance(data, dict):
+        raise ValueError(
+            f"Golden question at index {index} "
+            "must be a JSON object."
+        )
+
     try:
         evidence = [
-            Evidence(
-                evidence_id=item["evidence_id"],
-                document_id=item["document_id"],
-                text=item["text"],
-                start_offset=item["start_offset"],
-                end_offset=item["end_offset"],
+            _parse_evidence(
+                item,
+                question_index=index,
+                evidence_index=evidence_index,
             )
-            for item in data.get("evidence", [])
+            for evidence_index, item
+            in enumerate(data.get("evidence", []))
         ]
 
         return GoldenQuestion(
@@ -87,8 +88,37 @@ def _parse_golden_question(
             evidence=evidence,
         )
 
-    except (KeyError, TypeError) as exc:
+    except KeyError as exc:
         raise ValueError(
-            f"Invalid golden question "
-            f"at line {line_number}."
+            f"Golden question at index {index} "
+            f"is missing required field: {exc.args[0]}"
+        ) from exc
+
+
+def _parse_evidence(
+    data: dict,
+    *,
+    question_index: int,
+    evidence_index: int,
+) -> Evidence:
+    if not isinstance(data, dict):
+        raise ValueError(
+            f"Evidence {evidence_index} in question "
+            f"{question_index} must be a JSON object."
+        )
+
+    try:
+        return Evidence(
+            evidence_id=data["evidence_id"],
+            document_id=data["document_id"],
+            text=data["text"],
+            start_offset=data["start_offset"],
+            end_offset=data["end_offset"],
+        )
+
+    except KeyError as exc:
+        raise ValueError(
+            f"Evidence {evidence_index} in question "
+            f"{question_index} is missing required field: "
+            f"{exc.args[0]}"
         ) from exc
