@@ -163,7 +163,7 @@ class QdrantStore:
         chunk: Chunk,
         vector: Sequence[float],
     ) -> PointStruct:
-        if not vector:
+        if len(vector) == 0:
             raise ValueError(
                 f"Vector for chunk '{chunk.chunk_id}' must not be empty"
             )
