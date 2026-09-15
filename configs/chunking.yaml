@@ -14,3 +14,14 @@ method_experiment:
 
   chunk_size: 1200
   chunk_overlap: 64
+
+overlap_experiment:
+  strategy: markdown_recursive
+  chunk_size: 1000
+
+  chunk_overlaps:
+    - 0
+    - 32
+    - 64
+    - 128
+    - 256
