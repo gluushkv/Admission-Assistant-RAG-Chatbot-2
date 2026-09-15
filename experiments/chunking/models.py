@@ -14,17 +14,22 @@ class ChunkingConfiguration:
     chunk_overlap: int
 
 
+from dataclasses import dataclass
+
+
 @dataclass(frozen=True)
 class ChunkStatistics:
-
     n_chunks: int
     total_indexed_characters: int
 
     mean_length: float
     median_length: float
-
     min_length: int
     max_length: int
+
+    percentiles: dict[int, float]
+    counts_above: dict[int, int]
+    shares_above: dict[int, float]
 
     indexed_text_ratio: float
 
