@@ -10,10 +10,24 @@ common:
 
 method_experiment:
   strategies:
+    - recursive
+    - sentence
     - markdown
+    - markdown_recursive
 
-  chunk_size: 1200
+  chunk_size: 600
   chunk_overlap: 64
+
+size_experiments:
+  strategy: markdown_recursive
+  overlap: 64
+
+  chunk_sizes:
+   - 600
+   - 800
+   - 1000
+   - 1200
+
 
 overlap_experiment:
   strategy: markdown_recursive
