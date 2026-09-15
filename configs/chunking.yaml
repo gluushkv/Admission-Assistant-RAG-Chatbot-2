@@ -13,5 +13,5 @@ method_experiment:
     - recursive
     - markdown_recursive
 
-  chunk_size: 800
+  chunk_size: 1000
   chunk_overlap: 64
