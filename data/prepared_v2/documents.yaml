@@ -80,11 +80,6 @@ documents:
     year: 2026
     source_url: 'https://ba.hse.ru/docs#pagetop'
 
-  - document_id: paid_admission_rag
-    title: "Траектория поступления на платные места"
-    year: 2026
-    source_url: 'https://ba.hse.ru/entrpay'
-
   - document_id: president_government_scholarships_grants_rag
     title: "Стипендии Президента и Правительства Российской Федерации и гранты"
     year: 2026
@@ -129,3 +124,8 @@ documents:
     title: "Именные стипендии НИУ ВШЭ"
     year: 2026
     source_url: 'https://www.hse.ru/scholarships/name_new'
+
+  - document_id: dormitory_list_rag
+    title: "Список общежитий НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://www.hse.ru/dormitory'
