@@ -85,7 +85,7 @@ documents:
     year: 2026
     source_url: 'https://ba.hse.ru/entrpay'
 
-  - document_id: president_government_scholarships_grantsa_rag
+  - document_id: president_government_scholarships_grants_rag
     title: "Стипендии Президента и Правительства Российской Федерации и гранты"
     year: 2026
     source_url: 'https://www.hse.ru/scholarships/president_prioritet'
