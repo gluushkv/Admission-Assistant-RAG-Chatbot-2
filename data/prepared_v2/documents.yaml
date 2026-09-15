@@ -30,7 +30,7 @@ documents:
     year: 2026
     source_url: 'https://ba.hse.ru/discount'
 
-  - document_id: dormitory_allocation_procedure_rag
+  - document_id: dormitory_allocation_procedure_bachelor_specialist_rag
     title: "Порядок распределения мест в общежитиях НИУ ВШЭ"
     year: 2026
     source_url: 'https://www.hse.ru/dormoffice/predostavleniemest'
