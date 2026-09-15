@@ -93,7 +93,7 @@ class QdrantStore:
                 "Number of chunks must match number of vectors"
             )
 
-        if not chunks:
+        if len(chunks) == 0:
             return
 
         for start in range(
@@ -136,10 +136,10 @@ class QdrantStore:
                 "limit must be greater than 0"
             )
 
-        if not query_vector:
+        if len(query_vector) == 0:
             raise ValueError(
                 "query_vector must not be empty"
-            )
+                )
 
         result = self._client.query_points(
             collection_name=collection_name,
@@ -163,7 +163,7 @@ class QdrantStore:
         chunk: Chunk,
         vector: Sequence[float],
     ) -> PointStruct:
-        if not vector:
+        if len(vector) == 0:
             raise ValueError(
                 f"Vector for chunk '{chunk.chunk_id}' must not be empty"
             )
