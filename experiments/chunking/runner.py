@@ -11,6 +11,7 @@ import yaml
 from experiments.chunking.models import (
     ChunkingConfiguration,
     ConfigurationResult,
+    ChunkStatistics
 )
 from experiments.chunking.statistics import (
     compute_chunk_statistics,
@@ -200,6 +201,32 @@ def save_experiment_results(
         output_path=tables_dir / "summary.csv",
     )
 
+def _flatten_chunk_statistics(
+    statistics: ChunkStatistics,
+) -> dict[str, float | int]:
+
+    result: dict[str, float | int] = {
+        "n_chunks": statistics.n_chunks,
+        "total_indexed_characters": (
+            statistics.total_indexed_characters
+        ),
+        "mean_chunk_length": statistics.mean_length,
+        "median_chunk_length": statistics.median_length,
+        "min_chunk_length": statistics.min_length,
+        "max_chunk_length": statistics.max_length,
+        "indexed_text_ratio": statistics.indexed_text_ratio,
+    }
+
+    for percentile, value in statistics.percentiles.items():
+        result[f"p{percentile}_chunk_length"] = value
+
+    for threshold, value in statistics.counts_above.items():
+        result[f"n_chunks_gt_{threshold}"] = value
+
+    for threshold, value in statistics.shares_above.items():
+        result[f"share_chunks_gt_{threshold}"] = value
+
+    return result
 
 def build_summary(
     results: Sequence[ConfigurationResult],
@@ -252,29 +279,13 @@ def build_summary(
                 ),
                 "question_scope": scope_name,
                 "n_questions": len(scope_records),
-                "n_chunks": (
-                    result.chunk_statistics.n_chunks
-                ),
-                "total_indexed_characters": (
-                    result.chunk_statistics
-                    .total_indexed_characters
-                ),
-                "mean_chunk_length": (
-                    result.chunk_statistics.mean_length
-                ),
-                "median_chunk_length": (
-                    result.chunk_statistics.median_length
-                ),
-                "min_chunk_length": (
-                    result.chunk_statistics.min_length
-                ),
-                "max_chunk_length": (
-                    result.chunk_statistics.max_length
-                ),
-                "indexed_text_ratio": (
-                    result.chunk_statistics.indexed_text_ratio
-                ),
             }
+
+            row.update(
+                _flatten_chunk_statistics(
+                    result.chunk_statistics
+                )
+            )
 
             row.update(
                 _aggregate_metrics(

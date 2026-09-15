@@ -10,7 +10,7 @@ common:
 
 method_experiment:
   strategies:
-    - markdown_recursive
+    - markdown
 
   chunk_size: 1200
   chunk_overlap: 64
