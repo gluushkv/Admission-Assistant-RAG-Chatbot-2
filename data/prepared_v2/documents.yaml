@@ -60,7 +60,7 @@ documents:
     year: 2026
     source_url: 'https://ba.hse.ru/docs#pagetop'
 
-  - document_id: goscredit
+  - document_id: goscredit_rag
     title: "Образовательный кредит с государственной поддержкой"
     year: 2026
     source_url: 'https://ba.hse.ru/goscredit'
@@ -124,3 +124,8 @@ documents:
     title: "Контакты приемной комиссии"
     year: 2026
     source_url: 'https://ba.hse.ru/abitsupport'
+
+  - document_id: named_scholarships_rag
+    title: "Именные стипендии НИУ ВШЭ"
+    year: 2026
+    source_url: 'https://www.hse.ru/scholarships/name_new'
