@@ -5,35 +5,19 @@ common:
     - 5
 
   batch_size: 32
-
   warmup_documents: 32
   warmup_queries: 5
   query_repeats: 1
 
-
 models:
   e5_small:
-    model_id: intfloat/multilingual-e5-small
-    query_prefix: "query: "
-    document_prefix: "passage: "
+    model_name: multilingual-e5-small
 
   e5_base:
-    model_id: intfloat/multilingual-e5-base
-    query_prefix: "query: "
-    document_prefix: "passage: "
+    model_name: multilingual-e5-base
 
   bge_m3:
-    model_id: BAAI/bge-m3
-    query_prefix: ""
-    document_prefix: ""
+    model_name: bge-m3
 
   qwen3_06b:
-    model_id: Qwen/Qwen3-Embedding-0.6B
-
-    query_instruction: >-
-      Given a user question about university admission,
-      retrieve relevant passages that contain the information
-      needed to answer the question.
-
-    query_prefix: ""
-    document_prefix: ""
+    model_name: qwen3-embedding-0.6b

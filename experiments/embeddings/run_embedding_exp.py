@@ -5,12 +5,11 @@ import gc
 import json
 from collections.abc import Sequence
 from pathlib import Path
+from typing import cast
 
 import torch
 import yaml
-from huggingface_hub import (
-    snapshot_download,
-)
+from huggingface_hub import snapshot_download
 
 from experiments.embeddings.efficiency import (
     measure_embedding_efficiency,
@@ -20,15 +19,12 @@ from experiments.embeddings.retrieval_quality import (
     run_retrieval_quality,
 )
 from rag.embeddings.factory import (
+    EmbeddingModelName,
     create_embedder,
 )
-from rag.evaluation.models import (
-    GoldenQuestion,
-)
+from rag.evaluation.models import GoldenQuestion
 from rag.models import Chunk
-from rag.retrieval.qdrant_store import (
-    QdrantStore,
-)
+from rag.retrieval.qdrant_store import QdrantStore
 
 
 def run_embeddings_experiment(
@@ -44,7 +40,6 @@ def run_embeddings_experiment(
     ),
     device: str = "cuda",
 ) -> list[dict]:
-
 
     if len(chunks) == 0:
         raise ValueError(
@@ -128,6 +123,7 @@ def run_embeddings_experiment(
         )
     )
 
+
     corpus_texts = [
         chunk.text
         for chunk in chunks
@@ -146,6 +142,7 @@ def run_embeddings_experiment(
 
     results: list[dict] = []
 
+
     for (
         configuration_name,
         model_config,
@@ -153,18 +150,23 @@ def run_embeddings_experiment(
 
         print()
         print(
-            f"Running embedding model: "
+            "========================================"
+        )
+        print(
+            f"Running embedding configuration: "
             f"{configuration_name}"
         )
-
-        model_id = str(
-            model_config[
-                "model_id"
-            ]
+        print(
+            "========================================"
         )
 
-        print(
-            f"Model ID: {model_id}"
+        model_name = cast(
+            EmbeddingModelName,
+            str(
+                model_config[
+                    "model_name"
+                ]
+            ),
         )
 
         model_batch_size = int(
@@ -174,52 +176,43 @@ def run_embeddings_experiment(
             )
         )
 
+        print(
+            f"Model name: {model_name}"
+        )
+
+        print(
+            f"Batch size: {model_batch_size}"
+        )
+
+
         embedder = create_embedder(
-            model_id=model_id,
+            model_name=model_name,
             device=device,
-            batch_size=(
-                model_batch_size
-            ),
-            query_prefix=(
-                model_config.get(
-                    "query_prefix",
-                    "",
-                )
-            ),
-            document_prefix=(
-                model_config.get(
-                    "document_prefix",
-                    "",
-                )
-            ),
-            query_instruction=(
-                model_config.get(
-                    "query_instruction"
-                )
-            ),
+            batch_size=model_batch_size,
         )
 
         try:
+            print(
+                f"Model ID: {embedder.model_id}"
+            )
 
             (
                 vectors,
                 efficiency,
-            ) = (
-                measure_embedding_efficiency(
-                    embedder=embedder,
-                    corpus_texts=corpus_texts,
-                    queries=query_texts,
-                    device=device,
-                    warmup_documents=(
-                        warmup_documents
-                    ),
-                    warmup_queries=(
-                        warmup_queries
-                    ),
-                    query_repeats=(
-                        query_repeats
-                    ),
-                )
+            ) = measure_embedding_efficiency(
+                embedder=embedder,
+                corpus_texts=corpus_texts,
+                queries=query_texts,
+                device=device,
+                warmup_documents=(
+                    warmup_documents
+                ),
+                warmup_queries=(
+                    warmup_queries
+                ),
+                query_repeats=(
+                    query_repeats
+                ),
             )
 
             efficiency[
@@ -230,25 +223,24 @@ def run_embeddings_experiment(
                 "model_checkpoint_size_bytes"
             ] = (
                 _get_model_checkpoint_size_bytes(
-                    model_id
+                    embedder.model_id
                 )
             )
 
-            records = (
-                run_retrieval_quality(
-                    chunks=chunks,
-                    vectors=vectors,
-                    questions=questions,
-                    embedder=embedder,
-                    store=store,
-                    configuration_name=(
-                        configuration_name
-                    ),
-                    ks=ks,
-                    collection_name=(
-                        "embedding-experiment"
-                    ),
-                )
+
+            records = run_retrieval_quality(
+                chunks=chunks,
+                vectors=vectors,
+                questions=questions,
+                embedder=embedder,
+                store=store,
+                configuration_name=(
+                    configuration_name
+                ),
+                ks=ks,
+                collection_name=(
+                    "embedding-experiment"
+                ),
             )
 
             quality_summary = (
@@ -257,9 +249,13 @@ def run_embeddings_experiment(
                 )
             )
 
+
             result = {
                 "configuration": (
                     configuration_name
+                ),
+                "model_name": (
+                    model_name
                 ),
                 "model_id": (
                     embedder.model_id
@@ -274,6 +270,9 @@ def run_embeddings_experiment(
                     "configuration": (
                         configuration_name
                     ),
+                    "model_name": (
+                        model_name
+                    ),
                     "model_id": (
                         embedder.model_id
                     ),
@@ -285,6 +284,7 @@ def run_embeddings_experiment(
                 result
             )
 
+
             _print_result(
                 result
             )
@@ -295,6 +295,7 @@ def run_embeddings_experiment(
             )
 
         finally:
+
             del embedder
 
             gc.collect()
@@ -365,6 +366,28 @@ def _load_config(
             "'models' must not be empty"
         )
 
+    for (
+        configuration_name,
+        model_config,
+    ) in models.items():
+
+        if not isinstance(
+            model_config,
+            dict,
+        ):
+            raise ValueError(
+                f"Model configuration "
+                f"'{configuration_name}' "
+                "must be a mapping"
+            )
+
+        if "model_name" not in model_config:
+            raise ValueError(
+                f"Model configuration "
+                f"'{configuration_name}' "
+                "must contain 'model_name'"
+            )
+
     return config
 
 
@@ -396,6 +419,7 @@ def _get_model_checkpoint_size_bytes(
 def _path_size_bytes(
     path: Path,
 ) -> int:
+
 
     if path.is_file():
         return int(
@@ -579,9 +603,14 @@ def _save_quality_table(
         ]:
 
             rows.append(
-                dict(
-                    quality_row
-                )
+                {
+                    "model_name": (
+                        result[
+                            "model_name"
+                        ]
+                    ),
+                    **quality_row,
+                }
             )
 
     _write_csv(
@@ -609,52 +638,70 @@ def _save_quality_efficiency_table(
         ]:
 
             row = {
+                "model_name": (
+                    result[
+                        "model_name"
+                    ]
+                ),
                 **quality_row,
+
                 "embedding_dimension": (
                     efficiency[
                         "embedding_dimension"
                     ]
                 ),
-                "corpus_embedding_time_seconds": (
-                    efficiency[
-                        "corpus_embedding_time_seconds"
-                    ]
-                ),
-                "corpus_embedding_throughput_chunks_per_sec": (
-                    efficiency[
-                        "corpus_embedding_throughput_chunks_per_sec"
-                    ]
-                ),
-                "median_query_embedding_latency_ms": (
-                    efficiency[
-                        "median_query_embedding_latency_ms"
-                    ]
-                ),
-                "p95_query_embedding_latency_ms": (
-                    efficiency[
-                        "p95_query_embedding_latency_ms"
-                    ]
-                ),
-                "corpus_peak_vram_bytes": (
-                    efficiency[
-                        "corpus_peak_vram_bytes"
-                    ]
-                ),
-                "query_peak_vram_bytes": (
-                    efficiency[
-                        "query_peak_vram_bytes"
-                    ]
-                ),
-                "raw_vector_size_bytes": (
-                    efficiency[
-                        "raw_vector_size_bytes"
-                    ]
-                ),
+
                 "model_checkpoint_size_bytes": (
                     efficiency[
                         "model_checkpoint_size_bytes"
                     ]
                 ),
+
+                "raw_vector_size_bytes": (
+                    efficiency[
+                        "raw_vector_size_bytes"
+                    ]
+                ),
+
+
+                "corpus_embedding_time_seconds": (
+                    efficiency[
+                        "corpus_embedding_time_seconds"
+                    ]
+                ),
+
+                "corpus_embedding_throughput_chunks_per_sec": (
+                    efficiency[
+                        "corpus_embedding_throughput_chunks_per_sec"
+                    ]
+                ),
+
+                "corpus_peak_vram_bytes": (
+                    efficiency[
+                        "corpus_peak_vram_bytes"
+                    ]
+                ),
+
+
+                "median_query_embedding_latency_ms": (
+                    efficiency[
+                        "median_query_embedding_latency_ms"
+                    ]
+                ),
+
+                "p95_query_embedding_latency_ms": (
+                    efficiency[
+                        "p95_query_embedding_latency_ms"
+                    ]
+                ),
+
+                "query_peak_vram_bytes": (
+                    efficiency[
+                        "query_peak_vram_bytes"
+                    ]
+                ),
+
+
                 "batch_size": (
                     efficiency[
                         "batch_size"
@@ -683,9 +730,7 @@ def _write_csv(
             "Cannot save an empty table"
         )
 
-    fieldnames: list[
-        str
-    ] = []
+    fieldnames: list[str] = []
 
     for row in rows:
         for key in row:
@@ -734,6 +779,21 @@ def _print_result(
     )
 
     print()
+
+    print(
+        f"Configuration: "
+        f"{result['configuration']}"
+    )
+
+    print(
+        f"Model name: "
+        f"{result['model_name']}"
+    )
+
+    print(
+        f"Model ID: "
+        f"{result['model_id']}"
+    )
 
     if all_answerable is not None:
 
