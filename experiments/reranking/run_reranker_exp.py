@@ -156,7 +156,6 @@ def run_reranker_experiment(
                 "median_reranking_latency_ms": 0.0,
                 "p95_reranking_latency_ms": 0.0,
                 "peak_vram_bytes": 0,
-                "peak_vram_gb": 0.0,
             },
         }
     )
@@ -478,9 +477,9 @@ def _save_results(
                         "p95_reranking_latency_ms"
                     ]
                 ),
-                "peak_vram_gb": (
+                "peak_vram_bytes": (
                     efficiency[
-                        "peak_vram_gb"
+                        "peak_vram_bytes"
                     ]
                 ),
             }
@@ -568,9 +567,4 @@ def _print_result(
     print(
         "Median reranking latency: "
         f"{efficiency['median_reranking_latency_ms']:.3f} ms"
-    )
-
-    print(
-        "Peak VRAM: "
-        f"{efficiency['peak_vram_gb']:.3f} GB"
     )

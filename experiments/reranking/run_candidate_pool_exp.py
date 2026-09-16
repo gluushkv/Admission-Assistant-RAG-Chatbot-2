@@ -418,9 +418,9 @@ def _save_results(
                         "p95_reranking_latency_ms"
                     ]
                 ),
-                "peak_vram_gb": (
+                "peak_vram_bytes": (
                     efficiency[
-                        "peak_vram_gb"
+                        "peak_vram_bytes"
                     ]
                 ),
             }
