@@ -44,7 +44,6 @@ def run_reranker_experiment(
     ),
     device: str = "cuda",
 ) -> list[dict]:
-    """Compare no-reranker baseline with configured rerankers."""
 
     if len(chunks) == 0:
         raise ValueError(

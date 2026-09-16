@@ -28,7 +28,7 @@ reranker_experiment:
 
 
 candidate_pool_experiment:
-  reranker: qwen3
+  reranker: bge
 
   candidate_ks:
     - 5
