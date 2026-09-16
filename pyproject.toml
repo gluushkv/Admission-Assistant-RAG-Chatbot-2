@@ -16,8 +16,10 @@ dependencies = [
     "nltk",
     # --- embeddings ---
     "numpy",
+    "torch",
     "sentence-transformers>=2.7.0",
     "transformers>=4.51.0",
+    "huggingface-hub",
 
     # --- retrieval ---
     "qdrant-client",

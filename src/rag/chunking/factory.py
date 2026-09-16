@@ -39,20 +39,27 @@ DEFAULT_MARKDOWN_HEADERS: tuple[tuple[str, str], ...] = (
 def create_chunker(
     strategy: ChunkingStrategy,
     *,
-    chunk_size: int = 512,
-    chunk_overlap: int = 64,
+    chunk_size: int | None = None,
+    chunk_overlap: int | None = None,
     length_function: Callable[[str], int] = len,
     sentence_language: str = "russian",
     markdown_headers: Sequence[tuple[str, str]] = DEFAULT_MARKDOWN_HEADERS,
 ) -> Chunker:
 
-
-    _validate_size_parameters(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-    )
+    if strategy == "markdown":
+        splitter = _create_markdown_splitter(
+            headers=markdown_headers,
+        )
+        return MarkdownChunker(splitter=splitter)
 
     if strategy == "recursive":
+
+        chunk_size, chunk_overlap = _require_size_parameters(
+            strategy=strategy,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+
         splitter = _create_recursive_splitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
@@ -61,6 +68,13 @@ def create_chunker(
         return TextSplitterChunker(splitter=splitter)
 
     if strategy == "sentence":
+
+        chunk_size, chunk_overlap = _require_size_parameters(
+            strategy=strategy,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+
         splitter = _create_sentence_splitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
@@ -69,13 +83,14 @@ def create_chunker(
         )
         return TextSplitterChunker(splitter=splitter)
 
-    if strategy == "markdown":
-        splitter = _create_markdown_splitter(
-            headers=markdown_headers,
-        )
-        return MarkdownChunker(splitter=splitter)
-
     if strategy == "markdown_recursive":
+
+        chunk_size, chunk_overlap = _require_size_parameters(
+            strategy=strategy,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+
         markdown_splitter = _create_markdown_splitter(
             headers=markdown_headers,
         )
@@ -139,6 +154,31 @@ def _create_markdown_splitter(
         headers_to_split_on=list(headers),
         strip_headers=False,
     )
+
+
+def _require_size_parameters(
+    *,
+    strategy: ChunkingStrategy,
+    chunk_size: int | None,
+    chunk_overlap: int | None,
+) -> tuple[int, int]:
+
+    if chunk_size is None:
+        raise ValueError(
+            f"chunk_size is required for strategy '{strategy}'."
+        )
+
+    if chunk_overlap is None:
+        raise ValueError(
+            f"chunk_overlap is required for strategy '{strategy}'."
+        )
+
+    _validate_size_parameters(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+    )
+
+    return chunk_size, chunk_overlap
 
 
 def _validate_size_parameters(

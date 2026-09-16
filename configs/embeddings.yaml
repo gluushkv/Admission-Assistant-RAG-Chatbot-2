@@ -1,0 +1,23 @@
+common:
+  ks:
+    - 1
+    - 3
+    - 5
+
+  batch_size: 32
+  warmup_documents: 32
+  warmup_queries: 5
+  query_repeats: 1
+
+models:
+  e5_small:
+    model_name: multilingual-e5-small
+
+  e5_base:
+    model_name: multilingual-e5-base
+
+  bge_m3:
+    model_name: bge-m3
+
+  qwen3_06b:
+    model_name: qwen3-embedding-0.6b
