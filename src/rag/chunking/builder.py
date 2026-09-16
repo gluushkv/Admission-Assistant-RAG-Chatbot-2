@@ -13,8 +13,8 @@ def build_chunks(
     documents: Sequence[Document],
     *,
     strategy: ChunkingStrategy,
-    chunk_size: int,
-    chunk_overlap: int,
+    chunk_size: int | None = None,
+    chunk_overlap: int | None = None,
     sentence_language: str = "russian",
 ) -> list[Chunk]:
 
