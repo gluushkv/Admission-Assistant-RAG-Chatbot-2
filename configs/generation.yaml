@@ -5,7 +5,6 @@ common:
 
 retrieved_context:
   chunking_strategy: markdown
-
   embedding_model: bge-m3
   embedding_batch_size: 32
 
@@ -16,16 +15,6 @@ retrieved_context:
   final_k: 5
 
 models:
-  qwen3_1_7b:
-    model_id: Qwen/Qwen3-1.7B
-    backend: causal_lm
-    enable_thinking: false
-
-  qwen3_4b:
-    model_id: Qwen/Qwen3-4B
-    backend: causal_lm
-    enable_thinking: false
-
   gemma3_4b:
     model_id: google/gemma-3-4b-it
     backend: multimodal_lm
