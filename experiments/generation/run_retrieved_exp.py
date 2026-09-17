@@ -9,8 +9,8 @@ import torch
 
 from experiments.generation.contexts import (
     build_retrieved_contexts,
-    save_contexts,
 )
+
 from experiments.generation.run_generator_exp import (
     load_generation_config,
     run_generation_model,
@@ -36,12 +36,18 @@ def run_retrieved_experiment(
 ) -> list[dict]:
 
     if not documents:
-        raise ValueError("documents must not be empty")
+        raise ValueError(
+            "documents must not be empty"
+        )
 
     if not questions:
-        raise ValueError("questions must not be empty")
+        raise ValueError(
+            "questions must not be empty"
+        )
 
-    config = load_generation_config(config_path)
+    config = load_generation_config(
+        config_path
+    )
 
     common = config["common"]
     model_configs = config["models"]
@@ -52,81 +58,51 @@ def run_retrieved_experiment(
 
     output_dir = Path(output_dir)
     raw_dir = output_dir / "raw"
-    contexts_dir = output_dir / "contexts"
 
     print(
         "Preparing Retrieved Context: "
-        "Markdown -> BGE-M3 -> top-10 -> "
-        "BGE reranker -> top-5"
+        "Markdown -> BGE-M3 -> top-k -> "
+        "BGE reranker -> final-k"
     )
 
-    retrieved_contexts = build_retrieved_contexts(
-        documents=documents,
-        questions=questions,
-        store=store,
-        candidate_k=int(
-            retrieval_config.get(
-                "candidate_k",
-                10,
-            )
-        ),
-        final_k=int(
-            retrieval_config.get(
-                "final_k",
-                5,
-            )
-        ),
-        embedding_model_name=str(
-            retrieval_config.get(
-                "embedding_model",
-                "bge-m3",
-            )
-        ),
-        embedding_batch_size=int(
-            retrieval_config.get(
-                "embedding_batch_size",
-                32,
-            )
-        ),
-        reranker_model_id=str(
-            retrieval_config.get(
-                "reranker_model_id",
-                "BAAI/bge-reranker-v2-m3",
-            )
-        ),
-        reranker_batch_size=int(
-            retrieval_config.get(
-                "reranker_batch_size",
-                16,
-            )
-        ),
-        collection_name=str(
-            retrieval_config.get(
-                "collection_name",
-                "generation-retrieved-context",
-            )
-        ),
-        device=device,
-    )
-
-    save_contexts(
-        contexts=retrieved_contexts,
-        output_path=(
-            contexts_dir
-            / "retrieved_contexts.jsonl"
-        ),
+    retrieved_contexts = (
+        build_retrieved_contexts(
+            documents=documents,
+            questions=questions,
+            store=store,
+            device=device,
+            candidate_k=int(
+                retrieval_config.get(
+                    "candidate_k",
+                    10,
+                )
+            ),
+            final_k=int(
+                retrieval_config.get(
+                    "final_k",
+                    5,
+                )
+            ),
+        )
     )
 
     all_records: list[dict] = []
 
-    for configuration, model_config in model_configs.items():
+    for (
+        configuration,
+        model_config,
+    ) in model_configs.items():
 
         print()
-        print("=" * 40)
+        print(
+            "========================================"
+        )
         print(
             f"Generation model: {configuration}"
         )
-        print("=" * 40)
+        print(
+            "========================================"
+        )
 
         generator = create_generator(
             model_id=str(
@@ -158,11 +134,15 @@ def run_retrieved_experiment(
             ),
             temperature=model_config.get(
                 "temperature",
-                common.get("temperature"),
+                common.get(
+                    "temperature"
+                ),
             ),
             top_p=model_config.get(
                 "top_p",
-                common.get("top_p"),
+                common.get(
+                    "top_p"
+                ),
             ),
             enable_thinking=model_config.get(
                 "enable_thinking"
@@ -176,18 +156,26 @@ def run_retrieved_experiment(
         )
 
         try:
-            retrieved_records = run_generation_model(
-                generator=generator,
-                questions=questions,
-                contexts=retrieved_contexts,
-                configuration=configuration,
-                context_type="retrieved",
-                warmup_queries=int(
-                    common.get(
-                        "warmup_queries",
-                        3,
-                    )
-                ),
+            retrieved_records = (
+                run_generation_model(
+                    generator=generator,
+                    questions=questions,
+                    contexts=(
+                        retrieved_contexts
+                    ),
+                    configuration=(
+                        configuration
+                    ),
+                    context_type=(
+                        "retrieved"
+                    ),
+                    warmup_queries=int(
+                        common.get(
+                            "warmup_queries",
+                            3,
+                        )
+                    ),
+                )
             )
 
             save_raw_records(
@@ -207,6 +195,7 @@ def run_retrieved_experiment(
 
         finally:
             del generator
+
             gc.collect()
 
             if torch.cuda.is_available():
