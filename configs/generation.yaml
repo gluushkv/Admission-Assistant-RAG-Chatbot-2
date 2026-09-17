@@ -1,5 +1,5 @@
 common:
-  max_new_tokens: 256
+  max_new_tokens: 512
   do_sample: false
   warmup_queries: 3
 
