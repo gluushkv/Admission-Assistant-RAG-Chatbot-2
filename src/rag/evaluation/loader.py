@@ -122,3 +122,96 @@ def _parse_evidence(
             f"{question_index} is missing required field: "
             f"{exc.args[0]}"
         ) from exc
+
+
+def load_reference_facts(
+    path: str | Path,
+) -> dict[str, tuple[str, ...]]:
+    path = Path(path)
+
+    if not path.is_file():
+        raise FileNotFoundError(
+            "Reference facts file "
+            f"not found: {path}"
+        )
+
+    with path.open(
+        "r",
+        encoding="utf-8",
+    ) as file:
+        data = json.load(
+            file
+        )
+
+    if not isinstance(
+        data,
+        list,
+    ):
+        raise ValueError(
+            "Reference facts JSON "
+            "must contain a list"
+        )
+
+    result: dict[
+        str,
+        tuple[str, ...],
+    ] = {}
+
+    for item in data:
+        if not isinstance(
+            item,
+            dict,
+        ):
+            raise ValueError(
+                "Reference facts item "
+                "must be an object"
+            )
+
+        question_id = item.get(
+            "question_id"
+        )
+
+        facts = item.get(
+            "reference_facts"
+        )
+
+        if not isinstance(
+            question_id,
+            str,
+        ):
+            raise ValueError(
+                "Invalid question_id"
+            )
+
+        if not isinstance(
+            facts,
+            list,
+        ):
+            raise ValueError(
+                "reference_facts "
+                "must be a list"
+            )
+
+        parsed_facts: list[str] = []
+
+        for fact in facts:
+            if not isinstance(
+                fact,
+                str,
+            ):
+                raise ValueError(
+                    "Reference fact "
+                    "must be a string"
+                )
+
+            parsed_facts.append(
+                fact.strip()
+            )
+
+        result[
+            question_id
+        ] = tuple(
+            parsed_facts
+        )
+
+    return result

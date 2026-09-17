@@ -1,0 +1,36 @@
+common:
+  max_new_tokens: 256
+  do_sample: false
+  warmup_queries: 3
+
+retrieved_context:
+  chunking_strategy: markdown
+
+  embedding_model: bge-m3
+  embedding_batch_size: 32
+
+  reranker_model_id: BAAI/bge-reranker-v2-m3
+  reranker_batch_size: 16
+
+  candidate_k: 10
+  final_k: 5
+
+models:
+  qwen3_1_7b:
+    model_id: Qwen/Qwen3-1.7B
+    backend: causal_lm
+    enable_thinking: false
+
+  qwen3_4b:
+    model_id: Qwen/Qwen3-4B
+    backend: causal_lm
+    enable_thinking: false
+
+  gemma3_4b:
+    model_id: google/gemma-3-4b-it
+    backend: multimodal_lm
+
+  phi4_mini:
+    model_id: microsoft/Phi-4-mini-instruct
+    backend: causal_lm
+    trust_remote_code: true

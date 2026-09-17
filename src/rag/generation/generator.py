@@ -141,6 +141,41 @@ class Generator:
     def backend(self) -> GenerationBackend:
         return self._backend
 
+    def count_tokens(
+        self,
+        text: str,
+    ) -> int:
+        if not isinstance(text, str):
+            raise TypeError(
+                "text must be a string"
+            )
+
+        tokenizer = getattr(
+            self._processor,
+            "tokenizer",
+            self._processor,
+        )
+
+        encoded = tokenizer(
+            text,
+            add_special_tokens=False,
+        )
+
+        input_ids = encoded[
+            "input_ids"
+        ]
+
+        if (
+            input_ids
+            and isinstance(
+                input_ids[0],
+                list,
+            )
+        ):
+            input_ids = input_ids[0]
+
+        return len(input_ids)
+
     def generate(
         self,
         *,
