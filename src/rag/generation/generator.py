@@ -6,7 +6,6 @@ from typing import Literal
 import torch
 from transformers import (
     AutoModelForCausalLM,
-    AutoModelForMultimodalLM,
     AutoProcessor,
     AutoTokenizer,
 )
@@ -105,25 +104,25 @@ class Generator:
             )
 
         elif backend == "multimodal_lm":
+            from transformers import (
+                AutoModelForImageTextToText,
+                )
+
             self._processor = (
                 AutoProcessor.from_pretrained(
                     model_id,
-                    trust_remote_code=(
-                        trust_remote_code
-                    ),
+                    trust_remote_code=trust_remote_code,
                 )
             )
 
             self._model = (
-                AutoModelForMultimodalLM.from_pretrained(
-                    model_id,
-                    device_map=device_map,
-                    torch_dtype=torch_dtype,
-                    trust_remote_code=(
-                        trust_remote_code
-                    ),
-                )
+                AutoModelForImageTextToText.from_pretrained(
+                model_id,
+                device_map=device_map,
+                torch_dtype=torch_dtype,
+                trust_remote_code=trust_remote_code,
             )
+        )
 
         else:
             raise ValueError(
