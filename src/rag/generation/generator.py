@@ -6,7 +6,6 @@ from typing import Literal
 import torch
 from transformers import (
     AutoModelForCausalLM,
-    AutoModelForMultimodalLM,
     AutoProcessor,
     AutoTokenizer,
 )
@@ -105,25 +104,25 @@ class Generator:
             )
 
         elif backend == "multimodal_lm":
+            from transformers import (
+                AutoModelForImageTextToText,
+                )
+
             self._processor = (
                 AutoProcessor.from_pretrained(
                     model_id,
-                    trust_remote_code=(
-                        trust_remote_code
-                    ),
+                    trust_remote_code=trust_remote_code,
                 )
             )
 
             self._model = (
-                AutoModelForMultimodalLM.from_pretrained(
-                    model_id,
-                    device_map=device_map,
-                    torch_dtype=torch_dtype,
-                    trust_remote_code=(
-                        trust_remote_code
-                    ),
-                )
+                AutoModelForImageTextToText.from_pretrained(
+                model_id,
+                device_map=device_map,
+                torch_dtype=torch_dtype,
+                trust_remote_code=trust_remote_code,
             )
+        )
 
         else:
             raise ValueError(
@@ -140,6 +139,41 @@ class Generator:
     @property
     def backend(self) -> GenerationBackend:
         return self._backend
+
+    def count_tokens(
+        self,
+        text: str,
+    ) -> int:
+        if not isinstance(text, str):
+            raise TypeError(
+                "text must be a string"
+            )
+
+        tokenizer = getattr(
+            self._processor,
+            "tokenizer",
+            self._processor,
+        )
+
+        encoded = tokenizer(
+            text,
+            add_special_tokens=False,
+        )
+
+        input_ids = encoded[
+            "input_ids"
+        ]
+
+        if (
+            input_ids
+            and isinstance(
+                input_ids[0],
+                list,
+            )
+        ):
+            input_ids = input_ids[0]
+
+        return len(input_ids)
 
     def generate(
         self,

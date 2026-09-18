@@ -1,0 +1,20 @@
+common:
+  max_new_tokens: 512
+  do_sample: false
+  warmup_queries: 3
+
+retrieved_context:
+  chunking_strategy: markdown
+  embedding_model: bge-m3
+  embedding_batch_size: 32
+
+  reranker_model_id: BAAI/bge-reranker-v2-m3
+  reranker_batch_size: 16
+
+  candidate_k: 10
+  final_k: 5
+
+models:
+  phi4_mini:
+    model_id: microsoft/Phi-4-mini-instruct
+    backend: causal_lm
