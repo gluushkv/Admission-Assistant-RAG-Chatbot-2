@@ -18,8 +18,3 @@ models:
   gemma3_4b:
     model_id: google/gemma-3-4b-it
     backend: multimodal_lm
-
-  phi4_mini:
-    model_id: microsoft/Phi-4-mini-instruct
-    backend: causal_lm
-    trust_remote_code: true
