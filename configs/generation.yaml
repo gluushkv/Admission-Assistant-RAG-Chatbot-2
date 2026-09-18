@@ -18,4 +18,3 @@ models:
   phi4_mini:
     model_id: microsoft/Phi-4-mini-instruct
     backend: causal_lm
-    trust_remote_code: true
